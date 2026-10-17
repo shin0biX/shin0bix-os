@@ -7,6 +7,15 @@ import Contact from "./apps/Contact.jsx";
 import Admin from "./apps/Admin.jsx";
 
 /**
+ * ADMIN is a local authoring tool, not a public app.
+ * It is registered only in development (`npm run dev`) so production builds
+ * never ship or expose it — publish content by exporting content.json and
+ * committing it. Set to `true` only if you deliberately want the editor
+ * inside a deployed build.
+ */
+const ADMIN_ENABLED = import.meta.env.DEV;
+
+/**
  * App registry — the single source of truth for window titles and sizes.
  * `title` is what shows in the window chrome (keep the brand casing exact).
  */
@@ -65,17 +74,29 @@ export const APP_DEFS = {
     h: 580,
     component: Contact,
   },
-  admin: {
-    key: "admin",
-    label: "Admin",
-    title: "ADMIN — content manager",
-    icon: "admin",
-    w: 940,
-    h: 660,
-    component: Admin,
-  },
+  ...(ADMIN_ENABLED
+    ? {
+        admin: {
+          key: "admin",
+          label: "Admin",
+          title: "ADMIN — content manager",
+          icon: "admin",
+          w: 940,
+          h: 660,
+          component: Admin,
+        },
+      }
+    : {}),
 };
 
-export const DOCK_APPS = ["terminal", "projects", "security", "resume", "contact", "admin", "welcome"];
+export const DOCK_APPS = [
+  "terminal",
+  "projects",
+  "security",
+  "resume",
+  "contact",
+  ...(ADMIN_ENABLED ? ["admin"] : []),
+  "welcome",
+];
 
 export const DESKTOP_ICONS = ["projects", "terminal", "security", "resume", "contact"];

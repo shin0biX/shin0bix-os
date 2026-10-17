@@ -41,7 +41,7 @@ const HELP = [
   "whoami            identity check",
   "ls                list ~",
   "cat <file>        read about.txt / skills.txt / contact.txt",
-  "open <app>        projects · security · resume · contact · welcome · admin",
+  "open <app>        projects · security · resume · contact · welcome",
   "projects          project index",
   "social            where to find me",
   "neofetch          system specs",
@@ -136,7 +136,7 @@ export default function Terminal() {
           openApp(target);
           push("ok", `launching ${target}...`);
         } else {
-          push("err", `open: unknown app "${args[0] || ""}" — try projects, security, resume, contact, welcome, admin`);
+          push("err", `open: unknown app "${args[0] || ""}" — try projects, security, resume, contact, welcome`);
         }
         break;
       }

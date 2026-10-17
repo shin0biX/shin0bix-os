@@ -50,10 +50,11 @@ cinematic animations. Stealthy, technical, minimal — ninja-inspired, no clich�
 - **WELCOME.EXE** — first-boot welcome window with quick actions.
 - **RESUME.PDF** — printable resume view (use *Print / Save as PDF*).
 - **CONTACT** — mailto-based message form, copy-email, links.
-- **ADMIN** — built-in content manager: add / edit / delete projects, resume,
-  terminal files, welcome & contact copy and lab content, with live preview,
-  JSON export / import and reset. Ships as a reusable template — see
-  [Make it yours](#make-it-yours).
+- **ADMIN** — content manager: add / edit / delete projects, resume, terminal
+  files, welcome & contact copy and lab content, with live preview, JSON
+  export / import and reset. It is a **local authoring tool** — included in
+  `npm run dev` only and stripped from production builds, so visitors never
+  see it. See [Make it yours](#make-it-yours).
 - **Responsive** — the desktop folds into a mobile shell on small screens.
 - **Animations** — springs, staggered reveals, scanlines, drifting grid,
   typewriter boot — all respectful of `prefers-reduced-motion`.
@@ -105,12 +106,16 @@ Everything personal — projects, resume, terminal files, welcome and contact
 text, the security lab — comes from one file: **`public/content.json`**. The app
 reads it at runtime, so content can change without touching code.
 
-**1 · ADMIN app (no code).** Open **ADMIN** from the dock (`?app=admin`).
-Add / edit / delete anything; changes preview live in every app and are saved
-in your browser. To publish: **Data → Export content.json**, replace
-`public/content.json` in the repo with the download, commit, redeploy.
-`Import` loads an existing `content.json`; `Reset to file` discards local
-edits.
+**1 · ADMIN app (no code, local only).** Run `npm run dev` and open **ADMIN**
+from the dock (`?app=admin` or `open admin` in the terminal). The editor is
+registered in development builds only — it is not shipped to, or reachable
+on, the deployed site. Add / edit / delete anything; changes preview live in
+every app and are saved in your browser. To publish: **Data → Export
+content.json**, replace `public/content.json` in the repo with the download,
+commit, redeploy. `Import` loads an existing `content.json`; `Reset to file`
+discards local edits. (If you ever *do* want the editor inside a deployed
+build, flip `ADMIN_ENABLED` in `src/registry.js` — understand what you're
+shipping first.)
 
 **2 · Edit the file directly.** `public/content.json` is plain JSON — you can
 even edit it from the GitHub web editor:
