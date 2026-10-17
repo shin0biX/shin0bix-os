@@ -218,19 +218,37 @@ function Skills() {
 
 export default function SecurityLab() {
   const [tab, setTab] = useState("recon");
+  const tabsRef = useRef(null);
   const tabs = [
     ["recon", "01 · recon"],
     ["challenge", "02 · challenge"],
     ["skills", "03 · skills"],
   ];
+  const onTabKey = (e) => {
+    const ids = tabs.map(([id]) => id);
+    const i = ids.indexOf(tab);
+    let next = null;
+    if (e.key === "ArrowRight") next = ids[(i + 1) % ids.length];
+    else if (e.key === "ArrowLeft") next = ids[(i - 1 + ids.length) % ids.length];
+    else if (e.key === "Home") next = ids[0];
+    else if (e.key === "End") next = ids[ids.length - 1];
+    if (!next) return;
+    e.preventDefault();
+    setTab(next);
+    tabsRef.current?.querySelector(`[data-tab="${next}"]`)?.focus();
+  };
   return (
     <div className="sec">
-      <div className="sec__tabs" role="tablist">
+      <div className="sec__tabs" role="tablist" ref={tabsRef} onKeyDown={onTabKey}>
         {tabs.map(([id, label]) => (
           <button
             key={id}
+            data-tab={id}
+            id={`sec-tab-${id}`}
             role="tab"
             aria-selected={tab === id}
+            aria-controls="sec-panel"
+            tabIndex={tab === id ? 0 : -1}
             className={"sec__tab" + (tab === id ? " sec__tab--active" : "")}
             onClick={() => setTab(id)}
           >
@@ -238,9 +256,11 @@ export default function SecurityLab() {
           </button>
         ))}
       </div>
-      {tab === "recon" && <Recon />}
-      {tab === "challenge" && <Challenge />}
-      {tab === "skills" && <Skills />}
+      <div role="tabpanel" id="sec-panel" aria-labelledby={`sec-tab-${tab}`}>
+        {tab === "recon" && <Recon />}
+        {tab === "challenge" && <Challenge />}
+        {tab === "skills" && <Skills />}
+      </div>
     </div>
   );
 }

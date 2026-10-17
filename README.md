@@ -98,6 +98,23 @@ src/
   `src/registry.js`, `src/components/BootScreen.jsx` and `src/components/Chrome.jsx`.
 - **Theme tokens** (colors, glow, radius) live at the top of `src/index.css`.
 
+## Tests
+
+An end-to-end suite runs the real app in a real browser (`puppeteer-core`
+driving an installed Chrome / Brave — no browser download): boot sequence,
+window management (drag / focus / minimize / maximize / close), dock, terminal
+commands and history, deep links, project explorer, security lab, forms,
+mobile layout, keyboard access and console cleanliness.
+
+```bash
+npm run dev        # terminal 1 — http://localhost:5175
+npm run e2e        # terminal 2 — exits non-zero if any check fails
+```
+
+`CHROME_PATH` overrides browser auto-detection; `BASE` points the suite at a
+different URL (e.g. `BASE=http://localhost:4175 npm run e2e` against
+`npm run preview`).
+
 ## Deploy
 
 The build is fully static (`base: "./"`), so `dist/` can be served anywhere:

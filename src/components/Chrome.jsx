@@ -81,7 +81,7 @@ export function TopBar({ onOpen }) {
       <button
         className="topbar__brand"
         onClick={() => onOpen("welcome")}
-        aria-label="Open WELCOME.EXE"
+        aria-label="shin0biX OS — open WELCOME.EXE"
         title="shin0biX OS — v1.0.0"
       >
         <span className="topbar__dot" aria-hidden="true" />

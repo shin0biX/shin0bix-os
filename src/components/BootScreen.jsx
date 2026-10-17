@@ -53,8 +53,8 @@ export default function BootScreen({ onDone }) {
     <motion.div
       className="boot"
       onClick={finish}
-      role="button"
-      aria-label="Boot screen — click to skip"
+      role="region"
+      aria-label="shin0biX OS — boot sequence"
       initial={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: 0.45 } }}
     >
