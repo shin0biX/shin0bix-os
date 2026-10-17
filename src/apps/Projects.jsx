@@ -1,18 +1,20 @@
-import { useMemo, useState } from "react";
-import { PROJECTS, STATUS_LABELS } from "../data/projects.js";
+import { Fragment, useMemo, useState } from "react";
+import { useContent, STATUS_LABELS } from "../content.jsx";
 import { useOS } from "../context.js";
+
+const prettyUrl = (url) => String(url || "").replace(/^https?:\/\//, "").replace(/\/$/, "");
 
 function Card({ p }) {
   return (
     <article className="card">
       <header>
         <h3>{p.name}</h3>
-        <span className={`badge badge--${p.status}`}>{STATUS_LABELS[p.status]}</span>
+        <span className={`badge badge--${p.status}`}>{STATUS_LABELS[p.status] || p.status}</span>
       </header>
       <p className="card__tag">{p.tagline}</p>
       <p className="card__desc">{p.description}</p>
       <div className="chips">
-        {p.stack.map((s) => (
+        {(p.stack || []).map((s) => (
           <span key={s} className="chip">
             {s}
           </span>
@@ -34,29 +36,35 @@ function Card({ p }) {
   );
 }
 
-function Readme({ openApp }) {
+function Readme({ openApp, projects, identity }) {
+  const featured = useMemo(() => {
+    const fullStack = projects.filter((p) => p.cat === "full-stack");
+    return (fullStack.length ? fullStack : projects).slice(0, 3);
+  }, [projects]);
+
   return (
     <div className="readme">
       <h2>README.md</h2>
       <p>
-        Hi, I'm <span className="mono-acid">shin0biX</span> — Ujjawal Jain, a developer who
-        likes building full-stack products and studying how to break them.
+        Hi, I'm <span className="mono-acid">{identity.alias}</span> — {identity.name}, a
+        developer who likes building full-stack products and studying how to break them.
       </p>
-      <p>Feature projects, in production:</p>
-      <ul>
-        <li>
-          <b>Meetly</b> — WebRTC video calls & chat, live on meetly.ujjawalcodes.site
-        </li>
-        <li>
-          <b>StoriX</b> — file-storage platform with versioning, live on files.ujjawalcodes.site
-        </li>
-        <li>
-          <b>Shorty</b> — URL shortener with Redis caching, live on shorty.ujjawalcodes.site
-        </li>
-      </ul>
+      {featured.length > 0 && (
+        <>
+          <p>Feature projects, in production:</p>
+          <ul>
+            {featured.map((p) => (
+              <li key={p.id}>
+                <b>{p.name}</b> — {p.tagline}
+                {p.live ? `, live on ${prettyUrl(p.live)}` : ""}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
       <p>
-        The rest of the tree holds learning-tier builds — from flask-blog-app to the Spotify
-        Top 100 bot. More from the terminal: <span className="mono-acid">projects</span>.
+        The rest of the tree holds learning-tier builds. More from the terminal:{" "}
+        <span className="mono-acid">projects</span>.
       </p>
       <button className="btn" onClick={() => openApp("terminal")}>
         Open terminal
@@ -67,15 +75,21 @@ function Readme({ openApp }) {
 
 export default function Projects() {
   const { openApp } = useOS();
+  const { content } = useContent();
+  const PROJECTS = content.projects;
   const [sel, setSel] = useState("all");
+
+  const cats = useMemo(
+    () => [...new Set(PROJECTS.map((p) => p.cat).filter(Boolean))],
+    [PROJECTS]
+  );
 
   const filtered = useMemo(() => {
     if (sel === "readme") return [];
     if (sel === "all") return PROJECTS;
-    if (sel === "full-stack" || sel === "learning")
-      return PROJECTS.filter((p) => p.cat === sel);
+    if (cats.includes(sel)) return PROJECTS.filter((p) => p.cat === sel);
     return PROJECTS.filter((p) => p.id === sel);
-  }, [sel]);
+  }, [sel, PROJECTS, cats]);
 
   const nodeCls = (id, child) =>
     "proj__node" +
@@ -101,29 +115,21 @@ export default function Projects() {
               <span className="glyph">▾</span> all/
             </button>
           </li>
-          <li>
-            <button className={nodeCls("full-stack")} onClick={() => setSel("full-stack")}>
-              <span className="glyph">▾</span> full-stack/
-            </button>
-          </li>
-          {PROJECTS.filter((p) => p.cat === "full-stack").map((p) => (
-            <li key={p.id}>
-              <button className={nodeCls(p.id, true)} onClick={() => setSel(p.id)}>
-                <span className="glyph">·</span> {p.name}
-              </button>
-            </li>
-          ))}
-          <li>
-            <button className={nodeCls("learning")} onClick={() => setSel("learning")}>
-              <span className="glyph">▾</span> learning/
-            </button>
-          </li>
-          {PROJECTS.filter((p) => p.cat === "learning").map((p) => (
-            <li key={p.id}>
-              <button className={nodeCls(p.id, true)} onClick={() => setSel(p.id)}>
-                <span className="glyph">·</span> {p.name}
-              </button>
-            </li>
+          {cats.map((cat) => (
+            <Fragment key={cat}>
+              <li>
+                <button className={nodeCls(cat)} onClick={() => setSel(cat)}>
+                  <span className="glyph">▾</span> {cat}/
+                </button>
+              </li>
+              {PROJECTS.filter((p) => p.cat === cat).map((p) => (
+                <li key={p.id}>
+                  <button className={nodeCls(p.id, true)} onClick={() => setSel(p.id)}>
+                    <span className="glyph">·</span> {p.name}
+                  </button>
+                </li>
+              ))}
+            </Fragment>
           ))}
           <li>
             <button className={nodeCls("readme")} onClick={() => setSel("readme")}>
@@ -135,7 +141,7 @@ export default function Projects() {
 
       <div className="proj__main">
         {sel === "readme" ? (
-          <Readme openApp={openApp} />
+          <Readme openApp={openApp} projects={PROJECTS} identity={content.identity} />
         ) : (
           <>
             <div className="proj__head">
@@ -144,11 +150,17 @@ export default function Projects() {
                 {filtered.length} project{filtered.length === 1 ? "" : "s"}
               </span>
             </div>
-            <div className="proj__grid">
-              {filtered.map((p) => (
-                <Card key={p.id} p={p} />
-              ))}
-            </div>
+            {filtered.length === 0 ? (
+              <p className="proj__empty">
+                No projects yet — open <b>Admin</b> in the dock to add your first one.
+              </p>
+            ) : (
+              <div className="proj__grid">
+                {filtered.map((p) => (
+                  <Card key={p.id} p={p} />
+                ))}
+              </div>
+            )}
           </>
         )}
       </div>

@@ -43,6 +43,14 @@ const ICONS = {
       <path d="M15.6 8.4v4.8a2.6 2.6 0 0 0 5.2 0V12A8.8 8.8 0 1 0 17 20.1" />
     </svg>
   ),
+  admin: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 8h8M16.5 8H20" />
+      <circle cx="14.2" cy="8" r="2.1" />
+      <path d="M4 16h3.5M12 16h8" />
+      <circle cx="9.8" cy="16" r="2.1" />
+    </svg>
+  ),
 };
 
 export function AppIcon({ name }) {

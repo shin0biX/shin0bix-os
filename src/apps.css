@@ -652,6 +652,215 @@
   color: var(--acid);
 }
 
+/* ---------- ADMIN ---------- */
+
+.adm {
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  height: 100%;
+}
+.adm__side {
+  border-right: 1px solid var(--line-soft);
+  padding: 14px 10px;
+  overflow: auto;
+  background: rgba(159, 255, 61, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.adm__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  text-align: left;
+  background: none;
+  border: 0;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12.5px;
+  padding: 7px 9px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.adm__nav:hover {
+  background: rgba(159, 255, 61, 0.07);
+  color: var(--text);
+}
+.adm__nav--active {
+  background: var(--acid-soft);
+  color: var(--acid);
+}
+.adm__dot {
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px rgba(70, 230, 255, 0.7);
+}
+.adm__main {
+  overflow: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.adm__banner {
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  font-size: 11.5px;
+  color: var(--muted);
+  background: rgba(70, 230, 255, 0.04);
+}
+.adm__banner b {
+  color: var(--cyan);
+  letter-spacing: 0.1em;
+}
+.adm__card {
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  background: var(--surface-2);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.adm__card > .btn {
+  align-self: flex-start;
+}
+.adm__card h3 {
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.adm__count {
+  font-size: 10.5px;
+  font-weight: 400;
+  color: var(--acid);
+  border: 1px solid var(--line-soft);
+  border-radius: 99px;
+  padding: 1px 8px;
+  letter-spacing: 0;
+}
+.adm__note {
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.65;
+}
+.adm__note b {
+  color: var(--muted);
+  font-weight: 500;
+}
+.adm__row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+.adm__field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 150px;
+  flex: 1 1 auto;
+}
+.adm__field--grow {
+  flex: 1 1 100%;
+}
+.adm__label {
+  display: flex;
+  gap: 7px;
+  align-items: baseline;
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.adm__label em {
+  font-style: normal;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 10px;
+  color: var(--muted);
+}
+.adm__input,
+.adm__area {
+  font-size: 12.5px;
+}
+.adm__area {
+  resize: vertical;
+  min-height: 64px;
+  line-height: 1.6;
+}
+select.adm__input option {
+  background: var(--surface-2);
+  color: var(--text);
+}
+.adm__rowbtns {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding-bottom: 1px;
+}
+.adm__danger {
+  color: var(--danger);
+  border-color: rgba(255, 93, 93, 0.35);
+}
+.adm__danger:hover {
+  background: rgba(255, 93, 93, 0.08);
+  border-color: rgba(255, 93, 93, 0.55);
+}
+.adm__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.adm__list li::before {
+  content: "▸ ";
+  color: var(--acid);
+}
+.adm__list b {
+  color: var(--text);
+  font-weight: 500;
+}
+.adm__btns {
+  align-items: center;
+}
+.adm__preview {
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--muted);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--line-soft);
+  border-radius: 6px;
+  padding: 10px;
+  max-height: 320px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.proj__empty {
+  color: var(--faint);
+  font-size: 12.5px;
+  border: 1px dashed var(--line-soft);
+  border-radius: var(--radius-sm);
+  padding: 18px;
+}
+.proj__empty b {
+  color: var(--acid);
+  font-weight: 500;
+}
+
 /* ---------- mobile app tweaks ---------- */
 
 @media (max-width: 760px) {
@@ -681,6 +890,22 @@
   .win--security .win__body,
   .win--resume .win__body {
     padding: 14px;
+  }
+  .adm {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+  .adm__side {
+    flex-direction: row;
+    align-items: center;
+    border-right: 0;
+    border-bottom: 1px solid var(--line-soft);
+    padding: 8px 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .adm__main {
+    padding: 12px;
   }
 }
 

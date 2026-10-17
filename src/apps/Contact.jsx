@@ -1,8 +1,12 @@
 import { useState } from "react";
+import { useContent } from "../content.jsx";
 
-const EMAIL = "ujjwalfromkosi@gmail.com";
+const pretty = (url) => String(url || "").replace(/^https?:\/\//, "").replace(/\/$/, "");
 
 export default function Contact() {
+  const { content } = useContent();
+  const id = content.identity;
+  const EMAIL = id.email;
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [copied, setCopied] = useState(false);
 
@@ -29,10 +33,7 @@ export default function Contact() {
 
   return (
     <div className="contact">
-      <p className="contact__lead">
-        Got a project, an internship, or a security question? The fastest line is email — or
-        drop a message below and your mail client does the rest.
-      </p>
+      <p className="contact__lead">{content.contact.lead}</p>
 
       <form className="contact__form" onSubmit={submit}>
         <div className="contact__row2">
@@ -73,27 +74,21 @@ export default function Contact() {
       </form>
 
       <div className="contact__links">
-        <a
-          className="contact__link"
-          href="https://github.com/shin0biX"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <span className="glyph">→</span> <b>GitHub</b>{" "}
-          <span className="t-muted">github.com/shin0biX</span>
-        </a>
+        {id.github && (
+          <a className="contact__link" href={id.github} target="_blank" rel="noreferrer">
+            <span className="glyph">→</span> <b>GitHub</b>{" "}
+            <span className="t-muted">{pretty(id.github)}</span>
+          </a>
+        )}
         <a className="contact__link" href={`mailto:${EMAIL}`}>
           <span className="glyph">→</span> <b>Email</b> <span className="t-muted">{EMAIL}</span>
         </a>
-        <a
-          className="contact__link"
-          href="https://ujjawalcodes.site"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <span className="glyph">→</span> <b>Website</b>{" "}
-          <span className="t-muted">ujjawalcodes.site</span>
-        </a>
+        {id.website && (
+          <a className="contact__link" href={id.website} target="_blank" rel="noreferrer">
+            <span className="glyph">→</span> <b>Website</b>{" "}
+            <span className="t-muted">{pretty(id.website)}</span>
+          </a>
+        )}
       </div>
     </div>
   );

@@ -1,0 +1,176 @@
+{
+  "identity": {
+    "name": "Ujjawal Jain",
+    "alias": "shin0biX",
+    "role": "Full-Stack Developer · Security Learner",
+    "location": "India",
+    "email": "ujjwalfromkosi@gmail.com",
+    "github": "https://github.com/shin0biX",
+    "website": "https://ujjawalcodes.site"
+  },
+  "welcome": {
+    "intro": "Hey — I'm **Ujjawal** (`shin0biX`). This little operating system is my portfolio: poke around the **terminal**, browse **~/projects**, try the **security lab**, or just say hi.",
+    "tips": [
+      "type \"help\" in the terminal for the full command list",
+      "drag windows by their title bar · double-click to maximize",
+      "run \"neofetch\" for the system specs"
+    ]
+  },
+  "terminal": {
+    "whoami": "ujjawal jain — full-stack developer · security learner (aka shin0biX)",
+    "about": [
+      "ujjawal jain — full-stack developer & security learner.",
+      "b.tech CSE student. i build web apps end-to-end and break",
+      "them in labs afterwards. this desktop is my portfolio."
+    ],
+    "skills": [
+      "languages   python · javascript · c · c++ · html/css",
+      "backend     fastapi · flask · sqlalchemy · alembic · redis",
+      "frontend    react · vite · tailwind",
+      "infra       linux · git · docker · sqlite · nginx",
+      "security    recon · web app sec · linux privesc · AD (learning)"
+    ]
+  },
+  "contact": {
+    "lead": "Got a project, an internship, or a security question? The fastest line is email — or drop a message below and your mail client does the rest."
+  },
+  "projects": [
+    {
+      "id": "meetly",
+      "name": "Meetly",
+      "cat": "full-stack",
+      "status": "live",
+      "tagline": "Real-time video calls & chat.",
+      "description": "WebRTC calling with JWT-authenticated WebSocket signaling, room management and a TURN-backed media pipeline. Built to understand the whole life of a realtime connection.",
+      "stack": ["FastAPI", "WebRTC", "WebSockets", "SQLite"],
+      "live": "https://meetly.ujjawalcodes.site",
+      "repo": "https://github.com/shin0biX/Meetly"
+    },
+    {
+      "id": "storix",
+      "name": "StoriX",
+      "cat": "full-stack",
+      "status": "live",
+      "tagline": "A file-storage platform with opinions.",
+      "description": "Versioning, share links, usage plans and an admin console — a full-stack storage product built with FastAPI and SQLAlchemy, deployed in Docker.",
+      "stack": ["FastAPI", "SQLAlchemy", "Docker", "SQLite"],
+      "live": "https://files.ujjawalcodes.site",
+      "repo": "https://github.com/shin0biX/StoriX"
+    },
+    {
+      "id": "shorty",
+      "name": "Shorty",
+      "cat": "full-stack",
+      "status": "live",
+      "tagline": "URL shortener with superpowers.",
+      "description": "Custom aliases, password-protected links, Redis caching and click analytics, with a React frontend talking to a FastAPI backend.",
+      "stack": ["FastAPI", "React", "Redis", "SQLite"],
+      "live": "https://shorty.ujjawalcodes.site",
+      "repo": "https://github.com/shin0biX/Shorty"
+    },
+    {
+      "id": "flask-blog-app",
+      "name": "flask-blog-app",
+      "cat": "learning",
+      "status": "source",
+      "tagline": "Blog with auth, comments & rich text.",
+      "description": "A full Flask blog — user authentication, comments and sanitized rich-text posts. A deep dive into Flask-Login, WTForms and CKEditor.",
+      "stack": ["Flask", "SQLAlchemy", "WTForms", "CKEditor"],
+      "repo": "https://github.com/shin0biX/flask-blog-app"
+    },
+    {
+      "id": "fastapi-todo",
+      "name": "FastAPI-Todo",
+      "cat": "learning",
+      "status": "source",
+      "tagline": "Server-rendered todo app with JWT auth.",
+      "description": "Server-rendered tasks with JWT sessions, an admin panel and Alembic migrations — my first proper database-backed FastAPI application.",
+      "stack": ["FastAPI", "Jinja2", "Alembic", "SQLite"],
+      "repo": "https://github.com/shin0biX/FastAPI-Todo"
+    },
+    {
+      "id": "password-manager",
+      "name": "Password Manager",
+      "cat": "learning",
+      "status": "source",
+      "tagline": "Desktop password vault, built while learning.",
+      "description": "A Python + Tkinter desktop password manager with a generator and search — a small project that taught me a lot about plain UI code.",
+      "stack": ["Python", "Tkinter"],
+      "repo": "https://github.com/shin0biX/Password-Manger-Tkinter"
+    },
+    {
+      "id": "spotify-top-100",
+      "name": "Spotify Top 100",
+      "cat": "learning",
+      "status": "source",
+      "tagline": "Billboard Hot 100 → your Spotify playlist.",
+      "description": "Scrapes the current Billboard Hot 100 with BeautifulSoup and builds a ready-to-play playlist through Spotipy and the Spotify API.",
+      "stack": ["Python", "BeautifulSoup", "Spotipy"],
+      "repo": "https://github.com/shin0biX/Spotify_Top_100"
+    }
+  ],
+  "security": {
+    "flag": "SHIN0BIX{acid_green_recon}",
+    "skills": [
+      {
+        "label": "Web app security",
+        "level": 72,
+        "note": "OWASP-style testing, auth flows, access-control checks"
+      },
+      {
+        "label": "Recon & enumeration",
+        "level": 68,
+        "note": "nmap · ffuf · gobuster · service fingerprinting"
+      },
+      {
+        "label": "Linux privilege escalation",
+        "level": 60,
+        "note": "SUID/GTOFbins, cron, capabilities, PATH tricks"
+      },
+      {
+        "label": "Active Directory",
+        "level": 45,
+        "note": "enumeration, Kerberoasting, lateral movement — in progress"
+      },
+      {
+        "label": "Scripting & tooling",
+        "level": 74,
+        "note": "Python tooling, automation, custom payloads"
+      }
+    ]
+  },
+  "resume": {
+    "links": [
+      { "label": "github.com/shin0biX", "href": "https://github.com/shin0biX" },
+      { "label": "ujjawalcodes.site", "href": "https://ujjawalcodes.site" }
+    ],
+    "summary": "B.Tech student building full-stack applications with Python, FastAPI and React — and studying systems from the builder's and the attacker's side. I like shipping things that work end to end: auth, databases, deployments, and the security work that keeps them honest.",
+    "highlights": [
+      "Shipped three live full-stack apps — Meetly, StoriX and Shorty — serving on ujjawalcodes.site subdomains.",
+      "Built a WebRTC calling stack with TURN relay and JWT-authenticated signaling.",
+      "Practices offensive security in a home lab: OSCP-style boxes, Active Directory attack paths, and tooling of my own."
+    ],
+    "skillGroups": [
+      { "label": "Languages", "items": ["Python", "JavaScript", "C", "C++", "HTML / CSS"] },
+      { "label": "Backend", "items": ["FastAPI", "Flask", "SQLAlchemy", "Alembic", "Redis", "WebSockets"] },
+      { "label": "Frontend", "items": ["React", "Vite", "Tailwind CSS"] },
+      { "label": "Infra & tools", "items": ["Linux", "Git & GitHub", "Docker", "SQLite", "nginx"] },
+      {
+        "label": "Security",
+        "items": [
+          "Recon & enumeration",
+          "Web app security",
+          "Linux privilege escalation",
+          "Active Directory (learning)"
+        ]
+      }
+    ],
+    "education": [
+      {
+        "title": "B.Tech — Computer Science",
+        "meta": "in progress",
+        "note": "Coursework: DSA, OS, DBMS, OOP, networks — plus a lot of late-night side projects."
+      }
+    ]
+  }
+}

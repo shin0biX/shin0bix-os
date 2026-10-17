@@ -335,6 +335,7 @@ try {
     ["security", "SECURITY LAB"],
     ["resume", "RESUME.PDF"],
     ["contact", "CONTACT"],
+    ["admin", "ADMIN — content manager"],
     ["welcome", "WELCOME.EXE"],
   ];
   for (const [app, expected] of deep) {
@@ -349,7 +350,109 @@ try {
   await waitBoot();
   report("deep link invalid → welcome (not crash)", await page.$(W("welcome")) !== null);
 
-  /* ---------- 13. mobile ---------- */
+  /* ---------- 13. admin content manager ---------- */
+  await page.goto(`${BASE}/?app=admin`, { waitUntil: "load" });
+  await page.evaluate(() => localStorage.removeItem("shin0bixos.content.v1"));
+  await page.goto(`${BASE}/?app=admin`, { waitUntil: "load" });
+  await waitBoot();
+  report("admin: deep link opens ADMIN", (await titleOf("admin").catch(() => null)) === "ADMIN — content manager");
+
+  const navTo = (label) =>
+    page.evaluate((l) => {
+      [...document.querySelectorAll(".adm__nav")].find((b) => b.textContent.trim().startsWith(l))?.click();
+    }, label);
+  const setNative = (selector, value, proto) =>
+    page.evaluate(
+      (sel, val, p) => {
+        const el = document.querySelector(sel);
+        const setter = Object.getOwnPropertyDescriptor(window[p].prototype, "value").set;
+        setter.call(el, val);
+        el.dispatchEvent(new Event("input", { bubbles: true }));
+      },
+      selector,
+      value,
+      proto
+    );
+  const deleteBtnCount = () => page.$$eval('.adm [aria-label="Delete"]', (els) => els.length);
+
+  await navTo("Projects");
+  await sleep(300);
+  report("admin: 7 projects from content.json", (await deleteBtnCount()) === 7, String(await deleteBtnCount()));
+  await page.evaluate(() => {
+    [...document.querySelectorAll(".adm .btn")].find((b) => b.textContent.includes("Add project"))?.click();
+  });
+  await sleep(300);
+  await page.evaluate(() => {
+    const cards = [...document.querySelectorAll(".adm__card")];
+    const nameInput = cards[cards.length - 1].querySelector("input:not([list])");
+    const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+    setter.call(nameInput, "E2E Test Project");
+    nameInput.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  await sleep(300);
+  report("admin: add project → 8 rows", (await deleteBtnCount()) === 8, String(await deleteBtnCount()));
+
+  await page.click('.dock__item[aria-label="Open Projects"]');
+  await sleep(600);
+  const adminCardNames = await page.$$eval(W("projects") + " .card h3", (els) => els.map((e) => e.textContent));
+  report(
+    "admin: new project live in explorer",
+    adminCardNames.length === 8 && adminCardNames.includes("E2E Test Project"),
+    String(adminCardNames.length)
+  );
+  await page.click(W("projects") + " .win__btn--close");
+  await sleep(400);
+
+  await page.reload({ waitUntil: "load" });
+  await waitBoot();
+  await navTo("Projects");
+  await sleep(300);
+  report("admin: edits persist after reload", (await deleteBtnCount()) === 8, String(await deleteBtnCount()));
+
+  await navTo("Welcome");
+  await sleep(300);
+  await setNative(".adm textarea", "E2E EDITED INTRO — **bold** and `code`", "HTMLTextAreaElement");
+  await sleep(300);
+  await page.click('.dock__item[aria-label="Open Welcome"]');
+  await sleep(600);
+  const welcomeText = await page.$eval(W("welcome") + " .welcome__text", (el) => el.innerText);
+  const welcomeRendered = await page.evaluate(() => {
+    const t = document.querySelector(".welcome__text");
+    return t.querySelector("b") !== null && t.querySelector(".mono-acid") !== null;
+  });
+  report("admin: welcome text edit is live + rich text renders", welcomeText.includes("E2E EDITED INTRO") && welcomeRendered);
+  await page.click(W("welcome") + " .win__btn--close");
+  await sleep(400);
+
+  await navTo("Projects");
+  await sleep(300);
+  await page.evaluate(() => {
+    const cards = [...document.querySelectorAll(".adm__card")];
+    cards[cards.length - 1].querySelector('[aria-label="Delete"]').click();
+  });
+  await sleep(300);
+  report("admin: delete project → 7 rows", (await deleteBtnCount()) === 7, String(await deleteBtnCount()));
+
+  await navTo("Data");
+  await sleep(300);
+  const hasExport = await page.evaluate(() =>
+    [...document.querySelectorAll(".btn")].some((b) => b.textContent.includes("Export content.json"))
+  );
+  report("admin: export button present", hasExport);
+  await page.evaluate(() => {
+    [...document.querySelectorAll(".btn")].find((b) => b.textContent.includes("Reset to file"))?.click();
+  });
+  await sleep(400);
+  const lsCleared = await page.evaluate(() => localStorage.getItem("shin0bixos.content.v1") === null);
+  await navTo("Projects");
+  await sleep(300);
+  report(
+    "admin: reset restores file content",
+    lsCleared && (await deleteBtnCount()) === 7,
+    `lsCleared=${lsCleared}`
+  );
+
+  /* ---------- 14. mobile ---------- */
   await page.setViewport({ width: 430, height: 932, isMobile: true, hasTouch: true });
   await page.goto(`${BASE}/?app=projects`, { waitUntil: "load" });
   await waitBoot();
@@ -378,7 +481,7 @@ try {
   const mAfter = await page.$eval(W("projects"), (el) => JSON.stringify(el.getBoundingClientRect()));
   report("mobile: window drag disabled (stays fullscreen)", mBefore === mAfter);
 
-  /* ---------- 14. console cleanliness ---------- */
+  /* ---------- 15. console cleanliness ---------- */
   report("no console errors during session", consoleErrors.length === 0, consoleErrors.slice(0, 3).join(" | "));
 } finally {
   await browser.close();

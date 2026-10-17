@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { useOS } from "../context.js";
+import { useContent } from "../content.jsx";
+import { Rich } from "../rich.jsx";
 
 export default function Welcome() {
   const { openApp } = useOS();
+  const { content } = useContent();
   const [hide, setHide] = useState(
     () => localStorage.getItem("shin0bixos.welcome.done") === "1"
   );
@@ -24,9 +27,7 @@ export default function Welcome() {
       </div>
 
       <p className="welcome__text">
-        Hey — I'm <b>Ujjawal</b> (<span className="mono-acid">shin0biX</span>). This little
-        operating system is my portfolio: poke around the <b>terminal</b>, browse{" "}
-        <b>~/projects</b>, try the <b>security lab</b>, or just say hi.
+        <Rich text={content.welcome.intro} />
       </p>
 
       <div className="welcome__cta">
@@ -42,9 +43,9 @@ export default function Welcome() {
       </div>
 
       <ul className="welcome__tips">
-        <li>type "help" in the terminal for the full command list</li>
-        <li>drag windows by their title bar · double-click to maximize</li>
-        <li>run "neofetch" for the system specs</li>
+        {content.welcome.tips.map((t, i) => (
+          <li key={i}>{t}</li>
+        ))}
       </ul>
 
       <label className="welcome__hide">

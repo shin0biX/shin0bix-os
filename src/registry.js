@@ -4,6 +4,7 @@ import Projects from "./apps/Projects.jsx";
 import SecurityLab from "./apps/SecurityLab.jsx";
 import Resume from "./apps/Resume.jsx";
 import Contact from "./apps/Contact.jsx";
+import Admin from "./apps/Admin.jsx";
 
 /**
  * App registry — the single source of truth for window titles and sizes.
@@ -64,8 +65,17 @@ export const APP_DEFS = {
     h: 580,
     component: Contact,
   },
+  admin: {
+    key: "admin",
+    label: "Admin",
+    title: "ADMIN — content manager",
+    icon: "admin",
+    w: 940,
+    h: 660,
+    component: Admin,
+  },
 };
 
-export const DOCK_APPS = ["terminal", "projects", "security", "resume", "contact", "welcome"];
+export const DOCK_APPS = ["terminal", "projects", "security", "resume", "contact", "admin", "welcome"];
 
 export const DESKTOP_ICONS = ["projects", "terminal", "security", "resume", "contact"];

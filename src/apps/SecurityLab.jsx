@@ -1,35 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-
-const FLAG = "SHIN0BIX{acid_green_recon}";
-const TOKEN = btoa(`shin0biX OS :: lab unlocked :: flag ${FLAG}`);
-
-const SKILLS = [
-  {
-    label: "Web app security",
-    level: 72,
-    note: "OWASP-style testing, auth flows, access-control checks",
-  },
-  {
-    label: "Recon & enumeration",
-    level: 68,
-    note: "nmap · ffuf · gobuster · service fingerprinting",
-  },
-  {
-    label: "Linux privilege escalation",
-    level: 60,
-    note: "SUID/GTOFbins, cron, capabilities, PATH tricks",
-  },
-  {
-    label: "Active Directory",
-    level: 45,
-    note: "enumeration, Kerberoasting, lateral movement — in progress",
-  },
-  {
-    label: "Scripting & tooling",
-    level: 74,
-    note: "Python tooling, automation, custom payloads",
-  },
-];
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useContent } from "../content.jsx";
 
 function Recon() {
   const [target, setTarget] = useState("10.10.14.42");
@@ -105,6 +75,17 @@ function Recon() {
 }
 
 function Challenge() {
+  const { content } = useContent();
+  const FLAG = content.security.flag;
+  const TOKEN = useMemo(() => {
+    const raw = `shin0biX OS :: lab unlocked :: flag ${FLAG}`;
+    try {
+      return btoa(raw);
+    } catch {
+      // non-Latin1 characters — encode UTF-8 bytes first
+      return btoa(String.fromCharCode(...new TextEncoder().encode(raw)));
+    }
+  }, [FLAG]);
   const [answer, setAnswer] = useState("");
   const [status, setStatus] = useState(null);
   const [attempts, setAttempts] = useState(0);
@@ -187,6 +168,8 @@ function Challenge() {
 }
 
 function Skills() {
+  const { content } = useContent();
+  const SKILLS = content.security.skills || [];
   const [armed, setArmed] = useState(false);
   useEffect(() => {
     const t = setTimeout(() => setArmed(true), 150);

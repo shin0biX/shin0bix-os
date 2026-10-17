@@ -1,17 +1,21 @@
 import { Fragment } from "react";
-import { RESUME } from "../data/resume.js";
+import { useContent } from "../content.jsx";
 
 export default function Resume() {
+  const { content } = useContent();
+  const id = content.identity;
+  const R = content.resume;
+
   return (
     <div className="resume">
       <div className="resume__head">
         <div className="resume__who">
-          <h2>{RESUME.name}</h2>
-          <p>{RESUME.role}</p>
+          <h2>{id.name}</h2>
+          <p>{id.role}</p>
           <div className="resume__meta">
-            <span>{RESUME.location}</span>
-            <a href={`mailto:${RESUME.email}`}>{RESUME.email}</a>
-            {RESUME.links.map((l) => (
+            <span>{id.location}</span>
+            <a href={`mailto:${id.email}`}>{id.email}</a>
+            {R.links.map((l) => (
               <a key={l.href} href={l.href} target="_blank" rel="noreferrer">
                 {l.label}
               </a>
@@ -27,13 +31,13 @@ export default function Resume() {
 
       <section>
         <h3>Summary</h3>
-        <p>{RESUME.summary}</p>
+        <p>{R.summary}</p>
       </section>
 
       <section>
         <h3>Highlights</h3>
         <ul>
-          {RESUME.highlights.map((h) => (
+          {R.highlights.map((h) => (
             <li key={h}>{h}</li>
           ))}
         </ul>
@@ -42,7 +46,7 @@ export default function Resume() {
       <section>
         <h3>Skills</h3>
         <dl className="skillgrid">
-          {RESUME.skillGroups.map((g) => (
+          {R.skillGroups.map((g) => (
             <Fragment key={g.label}>
               <dt>{g.label}</dt>
               <dd>
@@ -59,7 +63,7 @@ export default function Resume() {
 
       <section>
         <h3>Education</h3>
-        {RESUME.education.map((e) => (
+        {R.education.map((e) => (
           <div key={e.title} className="edu">
             <b>{e.title}</b>
             <span>{e.meta}</span>

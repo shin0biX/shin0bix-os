@@ -432,7 +432,8 @@ body {
 
 /* apps that manage their own scrolling */
 .win--terminal .win__body,
-.win--projects .win__body {
+.win--projects .win__body,
+.win--admin .win__body {
   padding: 0;
   overflow: hidden;
 }

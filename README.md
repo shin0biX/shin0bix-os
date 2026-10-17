@@ -10,7 +10,9 @@ ujjawal jain — full-stack developer · security learner
 shin0biX OS renders the portfolio of **Ujjawal Jain (shin0biX)** as a futuristic
 developer workstation instead of a conventional page. It boots, gives you a
 desktop, and lets you explore projects, a terminal and a security lab the way
-you'd explore a real machine.
+you'd explore a real machine. It also works as a reusable portfolio template —
+every piece of personal content lives in `public/content.json`, editable through
+the built-in **ADMIN** app ([Make it yours](#make-it-yours)).
 
 ---
 
@@ -48,6 +50,10 @@ cinematic animations. Stealthy, technical, minimal — ninja-inspired, no clich�
 - **WELCOME.EXE** — first-boot welcome window with quick actions.
 - **RESUME.PDF** — printable resume view (use *Print / Save as PDF*).
 - **CONTACT** — mailto-based message form, copy-email, links.
+- **ADMIN** — built-in content manager: add / edit / delete projects, resume,
+  terminal files, welcome & contact copy and lab content, with live preview,
+  JSON export / import and reset. Ships as a reusable template — see
+  [Make it yours](#make-it-yours).
 - **Responsive** — the desktop folds into a mobile shell on small screens.
 - **Animations** — springs, staggered reveals, scanlines, drifting grid,
   typewriter boot — all respectful of `prefers-reduced-motion`.
@@ -73,6 +79,8 @@ src/
 ├── App.jsx              # OS shell: boot state + window manager
 ├── registry.js          # app definitions (titles, sizes, icons)
 ├── context.js           # OS context (openApp, closeApp, …)
+├── content.jsx          # content store (content.json + ADMIN edits)
+├── rich.jsx             # tiny **bold** / `code` renderer for editable text
 ├── components/
 │   ├── BootScreen.jsx   # INITIALIZING shin0biX OS...
 │   ├── Chrome.jsx       # background, top bar, dock, footer, icons
@@ -83,28 +91,69 @@ src/
 │   ├── Projects.jsx     # project explorer
 │   ├── SecurityLab.jsx  # recon · challenge · skills
 │   ├── Resume.jsx       # RESUME.PDF
-│   └── Contact.jsx      # CONTACT
+│   ├── Contact.jsx      # CONTACT
+│   └── Admin.jsx        # content manager (ADMIN)
 └── data/
-    ├── projects.js      # project content (edit me)
-    └── resume.js        # resume content (edit me)
+    └── content.default.json  # bundled fallback content
+public/
+└── content.json         # ← the one file that holds all your content
 ```
 
-## Customization
+## Make it yours
 
-- **Projects** live in `src/data/projects.js` — add an entry and it appears in
-  both the explorer and the terminal's `projects` command.
-- **Resume** content lives in `src/data/resume.js`.
-- **Branding strings** (titles, boot text, prompt) are centralized in
-  `src/registry.js`, `src/components/BootScreen.jsx` and `src/components/Chrome.jsx`.
-- **Theme tokens** (colors, glow, radius) live at the top of `src/index.css`.
+Everything personal — projects, resume, terminal files, welcome and contact
+text, the security lab — comes from one file: **`public/content.json`**. The app
+reads it at runtime, so content can change without touching code.
+
+**1 · ADMIN app (no code).** Open **ADMIN** from the dock (`?app=admin`).
+Add / edit / delete anything; changes preview live in every app and are saved
+in your browser. To publish: **Data → Export content.json**, replace
+`public/content.json` in the repo with the download, commit, redeploy.
+`Import` loads an existing `content.json`; `Reset to file` discards local
+edits.
+
+**2 · Edit the file directly.** `public/content.json` is plain JSON — you can
+even edit it from the GitHub web editor:
+
+```jsonc
+{
+  "identity": { "name": "…", "alias": "…", "role": "…", "location": "…",
+                "email": "…", "github": "…", "website": "…" },
+  "welcome":  { "intro": "… **bold** and `code` supported …",
+                "tips": ["…"] },
+  "terminal": { "whoami": "…", "about": ["line 1", "…"], "skills": ["…"] },
+  "contact":  { "lead": "…" },
+  "projects": [{ "id": "slug", "name": "…", "cat": "full-stack",
+                 "status": "live|source|wip", "tagline": "…",
+                 "description": "…", "stack": ["…"],
+                 "live": "https://…", "repo": "https://…" }],
+  "security": { "flag": "PREFIX{your_flag}", "skills": [
+                 { "label": "…", "level": 72, "note": "…" }] },
+  "resume":   { "links": [{ "label": "…", "href": "…" }], "summary": "…",
+                "highlights": ["…"],
+                "skillGroups": [{ "label": "…", "items": ["…"] }],
+                "education": [{ "title": "…", "meta": "…", "note": "…" }] }
+}
+```
+
+Precedence: browser edits (ADMIN) → `public/content.json` → bundled
+`src/data/content.default.json` (a fallback so the app works offline and can
+never render empty). Category names in `projects[].cat` group the explorer's
+tree automatically — add a new category string and it appears as its own
+folder.
+
+**Brand chrome** — the OS name, boot text, prompt and dock labels — lives in
+`src/registry.js`, `src/components/BootScreen.jsx` and
+`src/components/Chrome.jsx`; swap strings there to rebrand the shell itself.
 
 ## Tests
 
 An end-to-end suite runs the real app in a real browser (`puppeteer-core`
 driving an installed Chrome / Brave — no browser download): boot sequence,
 window management (drag / focus / minimize / maximize / close), dock, terminal
-commands and history, deep links, project explorer, security lab, forms,
-mobile layout, keyboard access and console cleanliness.
+commands and history, deep links, project explorer, security lab, forms, the
+ADMIN content manager (add / edit / delete / persistence / reset), mobile
+layout, keyboard access and console cleanliness.
 
 ```bash
 npm run dev        # terminal 1 — http://localhost:5175

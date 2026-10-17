@@ -1,30 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import { useOS } from "../context.js";
-import { PROJECTS, STATUS_LABELS } from "../data/projects.js";
+import { useContent, STATUS_LABELS } from "../content.jsx";
 import { DOCK_APPS } from "../registry.js";
 
 let uid = 0;
 const L = (kind, content) => ({ id: `l${++uid}`, kind, content });
 
-const FILES = {
-  "about.txt": () => [
-    "ujjawal jain — full-stack developer & security learner.",
-    "b.tech CSE student. i build web apps end-to-end and break",
-    "them in labs afterwards. this desktop is my portfolio.",
-  ],
-  "skills.txt": () => [
-    "languages   python · javascript · c · c++ · html/css",
-    "backend     fastapi · flask · sqlalchemy · alembic · redis",
-    "frontend    react · vite · tailwind",
-    "infra       linux · git · docker · sqlite · nginx",
-    "security    recon · web app sec · linux privesc · AD (learning)",
-  ],
-  "contact.txt": () => [
-    "email     ujjwalfromkosi@gmail.com",
-    "github    github.com/shin0biX",
-    "web       ujjawalcodes.site",
-  ],
-};
+/* about.txt / skills.txt come from the content system (ADMIN → Terminal);
+   contact.txt is generated from Profile so it can never drift. */
+const contactLines = (identity) => [
+  `email     ${identity.email}`,
+  `github    ${identity.github.replace(/^https?:\/\//, "").replace(/\/$/, "")}`,
+  `web       ${identity.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}`,
+];
 
 function bannerBox() {
   const title = "— shin0biX OS —";
@@ -53,7 +41,7 @@ const HELP = [
   "whoami            identity check",
   "ls                list ~",
   "cat <file>        read about.txt / skills.txt / contact.txt",
-  "open <app>        projects · security · resume · contact · welcome",
+  "open <app>        projects · security · resume · contact · welcome · admin",
   "projects          project index",
   "social            where to find me",
   "neofetch          system specs",
@@ -67,7 +55,14 @@ const HELP = [
 
 export default function Terminal() {
   const { openApp, closeApp, reboot, bootedAt } = useOS();
+  const { content } = useContent();
   const [lines, setLines] = useState(makeBanner);
+
+  const FILES = {
+    "about.txt": () => content.terminal.about,
+    "skills.txt": () => content.terminal.skills,
+    "contact.txt": () => contactLines(content.identity),
+  };
   const [value, setValue] = useState("");
   const histRef = useRef([]);
   const histIdxRef = useRef(-1);
@@ -123,7 +118,7 @@ export default function Terminal() {
         push("out", HELP.join("\n"));
         break;
       case "whoami":
-        push("ok", "ujjawal jain — full-stack developer · security learner (aka shin0biX)");
+        push("ok", content.terminal.whoami);
         break;
       case "ls":
         push("out", "about.txt   skills.txt   contact.txt   projects/   security-lab/   resume.pdf");
@@ -141,16 +136,19 @@ export default function Terminal() {
           openApp(target);
           push("ok", `launching ${target}...`);
         } else {
-          push("err", `open: unknown app "${args[0] || ""}" — try projects, security, resume, contact, welcome`);
+          push("err", `open: unknown app "${args[0] || ""}" — try projects, security, resume, contact, welcome, admin`);
         }
         break;
       }
       case "projects":
         push(
           "out",
-          PROJECTS.map(
-            (p) => `${p.name.padEnd(20)} ${STATUS_LABELS[p.status].padEnd(7)} ${p.repo}`
-          ).join("\n")
+          content.projects
+            .map(
+              (p) =>
+                `${p.name.padEnd(20)} ${(STATUS_LABELS[p.status] || p.status || "?").padEnd(7)} ${p.repo || p.live || ""}`
+            )
+            .join("\n")
         );
         push("sys", "run `open projects` for the full explorer");
         break;
@@ -158,9 +156,9 @@ export default function Terminal() {
         push(
           "out",
           [
-            "github    https://github.com/shin0biX",
-            "email     ujjwalfromkosi@gmail.com",
-            "web       https://ujjawalcodes.site",
+            `github    ${content.identity.github}`,
+            `email     ${content.identity.email}`,
+            `web       ${content.identity.website}`,
           ].join("\n")
         );
         break;
